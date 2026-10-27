@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Astuces Claude Code</title>
+<meta name="description" content="50 astuces Claude Code, de la base aux usages avancés — fiches en français.">
+<meta name="theme-color" content="#141210">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Astuces CC">
+<link rel="manifest" id="manifest">
+<link rel="icon" id="favicon">
+<link rel="apple-touch-icon" id="touchicon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#141210; --bg2:#1a1714; --surface:#201c19; --surface2:#29241f; --border:#36302a;
+  --text:#ede6dd; --muted:#a69c90; --faint:#6f665d;
+  --accent:#e07a52; --accent2:#f3b48e; --accent-ink:#1a0f0a;
+  --ok:#7fbf8e; --code-bg:#0f0d0b; --code-text:#e9dfd3;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+  --display:"Space Grotesk","Inter",system-ui,sans-serif;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --side:310px; --head:58px;
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f8f4ee; --bg2:#f1ebe2; --surface:#ffffff; --surface2:#f6f0e8; --border:#e3d9cc;
+  --text:#2a221c; --muted:#6e6358; --faint:#a3978a;
+  --accent:#c45d36; --accent2:#a8492a; --accent-ink:#fff;
+  --ok:#2f8a4a; --code-bg:#221d19; --code-text:#f1e8de;
+  --shadow:0 10px 30px rgba(80,50,20,.10);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f8f4ee; --bg2:#f1ebe2; --surface:#ffffff; --surface2:#f6f0e8; --border:#e3d9cc;
+    --text:#2a221c; --muted:#6e6358; --faint:#a3978a;
+    --accent:#c45d36; --accent2:#a8492a; --accent-ink:#fff;
+    --ok:#2f8a4a; --code-bg:#221d19; --code-text:#f1e8de;
+    --shadow:0 10px 30px rgba(80,50,20,.10);
+    color-scheme:light;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 var(--sans);min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 500px at 85% -10%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 60%),
+             radial-gradient(700px 400px at -10% 110%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 60%)}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.86em;background:var(--surface2);border:1px solid var(--border);padding:.08em .38em;border-radius:6px;word-break:break-word}
+kbd{font-family:var(--mono);font-size:.8em;background:var(--surface);border:1px solid var(--border);border-bottom-width:3px;padding:.05em .45em;border-radius:6px;white-space:nowrap}
+button{font:inherit;color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Header */
+header{position:sticky;top:0;z-index:30;height:var(--head);display:flex;align-items:center;gap:12px;padding:0 16px;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);min-width:0}
+.brand svg{flex:none}
+.brand b{font-family:var(--display);font-size:1.06rem;letter-spacing:-.01em;white-space:nowrap}
+.brand small{font-family:var(--mono);color:var(--muted);font-size:.72rem;display:block;line-height:1.1}
+.brand span{min-width:0;overflow:hidden}
+.spacer{flex:1}
+.iconbtn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer;flex:none}
+.iconbtn:hover{border-color:var(--accent)}
+.iconbtn svg{width:20px;height:20px}
+#menuBtn{display:none}
+.hprog{font-family:var(--mono);font-size:.78rem;color:var(--muted);white-space:nowrap}
+.hprog b{color:var(--accent)}
+
+/* Layout */
+.layout{position:relative;z-index:1;display:grid;grid-template-columns:var(--side) minmax(0,1fr);min-height:calc(100vh - var(--head))}
+aside.side{position:sticky;top:var(--head);height:calc(100vh - var(--head));overflow:auto;border-right:1px solid var(--border);background:color-mix(in srgb,var(--bg2) 70%,transparent);padding:16px 12px 40px;scrollbar-width:thin}
+main{min-width:0;padding:28px 40px 120px}
+.wrap{max-width:820px;margin:0 auto}
+
+/* Sidebar */
+.search{position:relative;margin-bottom:12px}
+.search input{width:100%;font:inherit;font-size:.92rem;padding:10px 12px 10px 36px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.search kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.seg{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;border:0;background:transparent;padding:6px;border-radius:7px;cursor:pointer;font-size:.82rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface2);color:var(--text);font-weight:600}
+.grp{margin-bottom:14px}
+.grp-h{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:4px 8px}
+.grp-h .cnt{margin-left:auto;color:var(--faint)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 25%,transparent);flex:none}
+.item{display:flex;align-items:flex-start;gap:10px;padding:7px 8px;border-radius:9px;text-decoration:none;color:var(--text);font-size:.9rem;line-height:1.35;border:1px solid transparent}
+.item:hover{background:var(--surface)}
+.item.active{background:color-mix(in srgb,var(--accent) 14%,var(--surface));border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.item .num{flex:none;font-family:var(--mono);font-size:.72rem;min-width:26px;text-align:center;padding:2px 0;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.item.is-read .num{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+.item.is-read .lbl{color:var(--muted)}
+.empty{color:var(--muted);font-size:.9rem;padding:8px}
+.side-foot{margin-top:18px;padding:12px 8px 0;border-top:1px solid var(--border);font-size:.76rem;color:var(--faint)}
+.side-foot a{color:var(--muted)}
+
+/* Home */
+.hero{padding:10px 0 8px}
+.term{background:var(--code-bg);color:var(--code-text);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.term-bar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:color-mix(in srgb,var(--code-bg) 80%,#fff 4%);border-bottom:1px solid rgba(255,255,255,.06);font-family:var(--mono);font-size:.72rem;color:#9b8f82}
+.term-bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}
+.term-bar i:nth-child(2){background:#febc2e}.term-bar i:nth-child(3){background:#28c840}
+.term-bar span{margin-left:8px}
+.term-body{padding:18px 20px 22px;font-family:var(--mono);font-size:.92rem;line-height:1.7}
+.term-body .p{color:#e07a52}
+.term-body .dim{color:#8d8276}
+.caret{display:inline-block;width:.6em;height:1.1em;background:#e07a52;vertical-align:-.18em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero h1{font-family:var(--display);font-size:clamp(2rem,5vw,3.1rem);line-height:1.08;letter-spacing:-.03em;margin:28px 0 12px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--muted);font-size:1.08rem;max-width:62ch;margin:0 0 22px}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:34px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:11px;border:1px solid var(--border);background:var(--surface);color:var(--text);text-decoration:none;font-weight:600;font-size:.94rem;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:34px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px}
+.stat b{display:block;font-family:var(--display);font-size:1.9rem;line-height:1.1}
+.stat span{color:var(--muted);font-size:.86rem}
+.bar{height:6px;border-radius:9px;background:var(--surface2);overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:9px;transition:width .4s}
+h2.sec{font-family:var(--display);font-size:1.3rem;margin:0 0 14px;letter-spacing:-.01em}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.cat{position:relative;display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px;overflow:hidden;transition:transform .15s,border-color .15s}
+.cat:hover{transform:translateY(-2px);border-color:var(--c)}
+.cat::after{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c)}
+.cat .ic{font-size:1.4rem}
+.cat h3{font-family:var(--display);font-size:1.05rem;margin:6px 0 4px}
+.cat p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.45}
+.cat .meta{margin-top:10px;font-family:var(--mono);font-size:.72rem;color:var(--faint)}
+.credits{margin-top:40px;padding:16px;border:1px dashed var(--border);border-radius:12px;color:var(--muted);font-size:.86rem}
+
+/* Tip */
+.crumb{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-bottom:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crumb a{color:var(--muted);text-decoration:none}.crumb a:hover{color:var(--accent)}
+.win{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.win-bar{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface2);font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+.win-bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}
+.win-bar i:nth-child(2){background:#febc2e}.win-bar i:nth-child(3){background:#28c840}
+.win-bar span{margin-left:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.win-bar .tag{margin-left:auto;display:inline-flex;align-items:center;gap:6px;color:var(--text);white-space:nowrap}
+.win-body{padding:26px 30px 30px}
+.tip-num{font-family:var(--mono);font-weight:700;color:var(--c);font-size:.95rem;letter-spacing:.04em}
+.tip h1{font-family:var(--display);font-size:clamp(1.55rem,3.6vw,2.2rem);line-height:1.15;letter-spacing:-.02em;margin:4px 0 18px}
+.essentiel{margin:0 0 22px;padding:14px 16px 14px 18px;border-radius:12px;background:color-mix(in srgb,var(--c) 11%,var(--surface));border-left:4px solid var(--c);font-size:1.03rem}
+.essentiel span{display:block;font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--c);margin-bottom:2px;font-weight:700}
+ul.points{list-style:none;padding:0;margin:0 0 8px}
+ul.points li{position:relative;padding:0 0 12px 28px}
+ul.points li::before{content:"❯";position:absolute;left:4px;top:0;font-family:var(--mono);color:var(--c);font-weight:700}
+figure.code{margin:18px 0 6px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--code-bg)}
+figure.code figcaption{display:flex;align-items:center;gap:8px;padding:7px 8px 7px 14px;font-family:var(--mono);font-size:.72rem;color:#a99d90;border-bottom:1px solid rgba(255,255,255,.07)}
+figure.code figcaption .copy{margin-left:auto;border:1px solid rgba(255,255,255,.14);background:transparent;color:#d9cdbf;border-radius:7px;padding:3px 9px;cursor:pointer;font-size:.72rem;font-family:var(--mono)}
+figure.code figcaption .copy:hover{border-color:#e07a52;color:#fff}
+figure.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.6;color:var(--code-text)}
+figure.code pre code{background:none;border:0;padding:0;font-size:inherit;word-break:normal}
+.note{margin:20px 0 0;padding:12px 14px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--accent) 50%,var(--border));font-size:.92rem;color:var(--muted)}
+.note b{color:var(--text)}
+.tip-actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 26px}
+.btn.read[aria-pressed="true"]{background:color-mix(in srgb,var(--ok) 18%,var(--surface));border-color:var(--ok);color:var(--ok)}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pager a{display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;min-width:0}
+.pager a:hover{border-color:var(--accent)}
+.pager small{display:block;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.pager .t{display:block;font-weight:600;font-size:.92rem;line-height:1.35;margin-top:2px}
+.pager .next{text-align:right;grid-column:2}
+.hint{margin-top:18px;font-size:.8rem;color:var(--faint);text-align:center}
+
+/* Mobile bottom bar */
+.bbar{display:none}
+.scrim{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  #menuBtn{display:inline-grid}
+  aside.side{position:fixed;z-index:40;top:0;left:0;bottom:0;height:auto;width:min(86vw,340px);transform:translateX(-102%);transition:transform .25s ease;background:var(--bg2);padding-top:18px;box-shadow:var(--shadow)}
+  body.drawer aside.side{transform:none}
+  .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+  body.drawer .scrim{opacity:1;pointer-events:auto}
+  main{padding:18px 16px calc(96px + env(safe-area-inset-bottom))}
+  .win-body{padding:20px 18px 22px}
+  .hprog{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .stats .stat:last-child{grid-column:1/-1}
+  .bbar{display:flex;position:fixed;z-index:30;left:0;right:0;bottom:0;gap:8px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border)}
+  .bbar button,.bbar a{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:11px;border:1px solid var(--border);background:var(--surface);color:var(--text);text-decoration:none;font-size:.88rem;font-weight:600;cursor:pointer}
+  .bbar .mid{flex:1.3}
+  .bbar [aria-disabled="true"]{opacity:.35;pointer-events:none}
+  .bbar .mid[aria-pressed="true"]{color:var(--ok);border-color:var(--ok)}
+  .hint{display:none}
+  .pager{grid-template-columns:1fr}
+  .pager .next{grid-column:auto}
+}
+@media (max-width:420px){ .brand small{display:none} }
+.fade{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);opacity:0;z-index:60;background:var(--text);color:var(--bg);padding:8px 14px;border-radius:10px;font-size:.86rem;transition:all .2s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <button class="iconbtn" id="menuBtn" aria-label="Ouvrir le menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+  <a class="brand" href="#">
+    <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#e07a52"/><path d="M17 22l11 10-11 10" fill="none" stroke="#1a0f0a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="32" y="40" width="16" height="6" rx="3" fill="#1a0f0a"/></svg>
+    <span><b>Astuces Claude Code</b><small>~/claude-code-tips --lang=fr</small></span>
+  </a>
+  <div class="spacer"></div>
+  <span class="hprog" id="hprog"></span>
+  <button class="iconbtn" id="themeBtn" aria-label="Changer de thème"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+</header>
+
+<div class="layout">
+  <aside class="side" id="side" aria-label="Sommaire">
+    <label class="search">
+      <span class="sr">Rechercher une astuce</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Rechercher…" autocomplete="off">
+      <kbd>/</kbd>
+    </label>
+    <div class="seg" role="group" aria-label="Classement">
+      <button id="byCat" aria-pressed="true">Par thème</button>
+      <button id="byNum" aria-pressed="false">Par numéro</button>
+    </div>
+    <nav id="nav"></nav>
+    <div class="side-foot">Fiches en français d'après <a href="https://github.com/ykdojo/claude-code-tips" target="_blank" rel="noopener">ykdojo/claude-code-tips</a> © YK Sugi.</div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <main id="main"><div class="wrap" id="view"></div></main>
+</div>
+
+<div class="bbar" id="bbar"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const SRC = 'https://github.com/ykdojo/claude-code-tips';
+
+const CATS = {
+  start:   {label:'Bien démarrer',          icon:'⚡', color:'#e07a52', desc:'Commandes, raccourcis, réglages : les bases à poser dès le premier jour.'},
+  context: {label:'Maîtriser le contexte',   icon:'🥛', color:'#d9a441', desc:'Garder une conversation fraîche : compacter, passer le relais, cloner.'},
+  method:  {label:'Méthode de travail',      icon:'🧩', color:'#6fae7d', desc:'Découper, tester, paralléliser, planifier, simplifier.'},
+  git:     {label:'Git, revue & qualité',    icon:'🔀', color:'#5f9fd6', desc:'Commits, PR, CI, tests et vérification de ce que Claude produit.'},
+  beyond:  {label:'Au-delà du code',         icon:'🌐', color:'#b07fd1', desc:'Recherche, écriture, presse-papiers : Claude Code comme interface universelle.'},
+  auto:    {label:'Autonomie & sécurité',    icon:'🛡️', color:'#d4688a', desc:'Mode auto, conteneurs, pilotage à distance, comptes multiples.'},
+  mindset: {label:'État d\'esprit',          icon:'🧭', color:'#4fb3b0', desc:'Progresser, automatiser, partager, comprendre l\'écosystème.'}
+};
+
+/* Mini-syntaxe des textes : `code`, **gras**, {{Ctrl+B}} touches, [lien](url) */
+const TIPS = [
+{n:0,c:'start',a:'tip-0-customize-your-status-line',t:'Personnaliser la ligne de statut',
+ e:'Affichez en permanence, en bas de l\'écran, les infos qui comptent — surtout le remplissage du contexte.',
+ p:['La ligne de statut est entièrement configurable : modèle, dossier courant, branche Git, nombre de fichiers non commités, synchronisation avec le dépôt distant, jauge de tokens consommés.',
+    'L\'auteur y ajoute une seconde ligne qui rappelle son dernier message : idéal pour se resituer d\'un coup d\'œil quand on jongle entre plusieurs sessions.',
+    'Son script `context-bar.sh` propose 10 thèmes de couleur ; il est fourni avec ses instructions dans le dossier `scripts` du dépôt.']},
+{n:1,c:'start',a:'tip-1-learn-a-few-essential-slash-commands',t:'Connaître quelques commandes slash essentielles',
+ e:'Tapez `/` pour tout voir ; cinq commandes méritent d\'être connues par cœur.',
+ p:['`/usage` — votre consommation face aux limites (session en cours, semaine). Astuce : laissez-la ouverte et rafraîchissez avec {{Tab}} puis {{Maj+Tab}}.',
+    '`/chrome` — gère l\'intégration native avec le navigateur Chrome.',
+    '`/mcp` — gère les serveurs MCP (Model Context Protocol, le protocole qui branche des outils externes sur Claude).',
+    '`/stats` — vos statistiques avec un graphe d\'activité façon GitHub : tokens, sessions, plus longues séries.',
+    '`/clear` — efface la conversation pour repartir de zéro.']},
+{n:2,c:'beyond',a:'tip-2-talk-to-claude-code-with-your-voice',t:'Parler à Claude Code avec sa voix',
+ e:'On s\'exprime bien plus vite à l\'oral qu\'au clavier — et un modèle de transcription local suffit largement.',
+ p:['Outils testés par l\'auteur sur Mac : superwhisper, MacWhisper et Super Voice Assistant (open source).',
+    'Les erreurs de transcription gênent peu : Claude reconstitue le sens des mots mal compris.',
+    'L\'image à garder : plutôt que d\'échanger des SMS avec un ami, envoyez-lui des messages vocaux.',
+    'Au bureau ou même en avion : chuchoter dans des écouteurs filaires avec le micro près de la bouche fonctionne très bien.',
+    'Claude Code propose désormais un mode vocal intégré ; l\'auteur garde son modèle local, qu\'il trouve plus rapide.']},
+{n:3,c:'method',a:'tip-3-break-down-large-problems-into-smaller-ones',t:'Découper les gros problèmes en petits',
+ e:'Si Claude n\'y arrive pas d\'un coup, ne passez pas de A à B : passez par A1, A2, A3.',
+ p:['Demandez à Claude de décomposer la tâche en sous-problèmes, et redécoupez ceux qui résistent encore, jusqu\'à ce que chaque morceau soit soluble.',
+    'Exemple de l\'auteur : son application de transcription vocale a d\'abord été une série de petits exécutables isolés (télécharger un modèle, enregistrer, transcrire un fichier), assemblés seulement à la fin.',
+    'C\'est exactement le réflexe d\'un bon ingénieur logiciel — et ces compétences restent un puissant multiplicateur avec un agent.']},
+{n:4,c:'git',a:'tip-4-using-git-and-github-cli-like-a-pro',t:'Git et GitHub CLI comme un pro',
+ e:'Déléguez à Claude commits, branches, pull et push — et exploitez la puissance de `gh`.',
+ p:['Plus besoin de rédiger les messages de commit vous-même.',
+    'Réglage de prudence de l\'auteur : `pull` autorisé automatiquement, `push` soumis à validation (une erreur de push contamine le dépôt distant).',
+    'Avec `gh` (GitHub CLI, l\'outil en ligne de commande de GitHub), faites créer des PR (pull requests, demandes de fusion) en **brouillon** : risque minimal, vous relisez avant de les passer en « prête pour revue ».',
+    '`gh api graphql` permet des requêtes arbitraires — par exemple retrouver l\'historique exact des modifications d\'une description de PR.',
+    'Pour retirer la mention `Co-Authored-By`, le pied de page des PR et le lien de session, réglez `attribution` dans les paramètres (ce réglage remplace l\'ancien `includeCoAuthoredBy`).'],
+ code:[{l:'~/.claude/settings.json',v:`{
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  }
+}`}]},
+{n:5,c:'context',a:'tip-5-ai-context-is-like-milk-its-best-served-fresh-and-condensed',t:'Le contexte, c\'est comme le lait : frais et concentré',
+ e:'Une conversation neuve donne les meilleurs résultats ; plus elle s\'allonge, plus la qualité baisse.',
+ p:['Chaque message ajoute du contexte que le modèle doit retraiter, ce qui dégrade peu à peu ses performances.',
+    'Règle simple : une nouvelle conversation par nouveau sujet, ou dès que les réponses perdent en pertinence.']},
+{n:6,c:'beyond',a:'tip-6-getting-output-out-of-your-terminal',t:'Sortir proprement le contenu du terminal',
+ e:'Copier depuis le terminal est souvent sale ; il existe plusieurs sorties plus propres.',
+ p:['`/copy` copie la dernière réponse de Claude en Markdown dans le presse-papiers — le plus simple.',
+    'Sur Mac/Linux, demandez à Claude d\'envoyer le contenu directement au presse-papiers via `pbcopy`.',
+    'Faites écrire le contenu dans un fichier puis ouvrir dans VS Code, éventuellement à la ligne modifiée ; pour un `.md`, {{Ctrl+Maj+P}} → « Markdown: Open Preview » affiche le rendu.',
+    'Faites ouvrir une URL dans votre navigateur, ou le dépôt courant dans GitHub Desktop (pratique pour un worktree situé ailleurs).',
+    'Combinaison gagnante : pour retoucher une description de PR, la faire copier dans un fichier local, l\'éditer, la vérifier, puis la renvoyer sur GitHub.'],
+ note:'Sous Windows, l\'équivalent de `pbcopy` est `clip` (ou `Set-Clipboard` en PowerShell).'},
+{n:7,c:'start',a:'tip-7-set-up-terminal-aliases-for-quick-access',t:'Des alias de terminal pour tout lancer vite',
+ e:'Quelques alias d\'une ou deux lettres, et Claude Code se lance en un geste.',
+ p:['Les alias de l\'auteur : `c` (Claude Code), `ch` (avec Chrome), `cr` (serveur de pilotage à distance), `gb` (GitHub Desktop), `co` (VS Code), `q` (dossier des projets).',
+    'Ils se combinent avec les options : `c -c` reprend la dernière conversation, `c -r` liste les conversations récentes ; idem avec `ch`.',
+    'Lancer `c` depuis le dossier parent de tous les projets donne à Claude accès à n\'importe lequel d\'entre eux.'],
+ code:[{l:'~/.zshrc ou ~/.bashrc',v:`alias c='claude'
+alias ch='claude --chrome'
+alias cr='claude remote-control'
+alias co='code'
+alias q='cd ~/projets'`},
+ {l:'Équivalent PowerShell ($PROFILE)',v:`function c  { claude @args }
+function ch { claude --chrome @args }
+function q  { Set-Location C:\\DEV }`}],
+ note:'Le bloc PowerShell est un ajout de cette version française, pour Windows.'},
+{n:8,c:'context',a:'tip-8-proactively-compact-your-context',t:'Compacter son contexte de façon proactive',
+ e:'Plutôt que de subir l\'auto-compaction, faites écrire un document de passation et repartez à neuf.',
+ p:['`/compact` résume la conversation ; l\'auto-compaction se déclenche quand le contexte est plein (plus tôt via `/autocompact`). L\'auteur la désactive dans `/config` pour garder la main.',
+    'Sa méthode : demander un `HANDOFF.md` qui explique l\'objectif, ce qui a été tenté, ce qui a marché ou échoué, et la suite — de quoi permettre à un agent neuf de reprendre avec ce seul fichier.',
+    'Relisez-le vite et faites compléter ce qui manque, puis ouvrez une nouvelle conversation en donnant simplement le chemin du fichier.',
+    'Aux sessions suivantes, demandez à l\'agent de mettre ce document à jour pour son successeur.',
+    'La commande `/handoff` (plugin dx, astuce 44) automatise tout le processus.']},
+{n:9,c:'method',a:'tip-9-complete-the-write-test-cycle-for-autonomous-tasks',t:'Boucler le cycle écrire-tester',
+ e:'Pour qu\'une tâche tourne seule, Claude doit pouvoir vérifier lui-même : écrire, exécuter, contrôler, recommencer.',
+ p:['Exemple : laisser Claude lancer `git bisect` pour trouver le commit fautif — à condition de lui fournir un test exécutable sur chaque commit.',
+    'Pour une application interactive en terminal, utilisez `tmux` : ouvrir une session, y envoyer des touches, capturer l\'écran, vérifier le résultat.',
+    'Pour le web : Playwright MCP s\'appuie sur l\'arbre d\'accessibilité (fiable, mais gourmand en contexte) ; l\'intégration Chrome native travaille par captures d\'écran et coordonnées (plus lente, utile pour profiter d\'une session déjà connectée). L\'auteur n\'active Chrome qu\'au besoin, via l\'alias `ch`.',
+    'Dans son CLAUDE.md, il impose à Chrome d\'utiliser `read_page`/`find` et des références d\'éléments plutôt que des coordonnées, et pas de capture sauf demande.',
+    'Soyez créatif : wheel Python construite localement pour tester sur Google Colab, ou PR brouillon activant la CI (intégration continue) Windows pour tester sans machine Windows.'],
+ code:[{l:'bash — tester une appli de terminal via tmux',v:`tmux new-session -d -s test
+tmux send-keys -t test 'claude' Enter
+sleep 2
+tmux send-keys -t test '/context' Enter
+sleep 1
+tmux capture-pane -t test -p   # lire le résultat`}]},
+{n:10,c:'beyond',a:'tip-10-cmda-and-ctrla-are-your-friends',t:'Ctrl+A (ou Cmd+A) est votre ami',
+ e:'Quand Claude ne peut pas lire une page, sélectionnez tout, copiez, collez.',
+ p:['Utile pour une page privée (non sensible) ou un site que Claude peine à récupérer, comme Reddit.',
+    'Marche tout aussi bien pour la sortie d\'un autre programme en ligne de commande.',
+    'Gmail : cliquez « Tout imprimer » pour déplier tout le fil, annulez l\'impression, puis {{Ctrl+A}}.',
+    'YouTube : « Afficher la transcription », puis {{Ctrl+A}} pour résumer ou interroger la vidéo.',
+    'Valable avec n\'importe quelle IA, pas seulement Claude Code.']},
+{n:11,c:'mindset',a:'tip-11-invest-in-your-own-workflow',t:'Investir dans son propre outillage',
+ e:'Prenez un peu de temps pour affûter vos outils : c\'est un investissement qui rapporte à chaque usage.',
+ p:['L\'auteur est allé loin : application de transcription écrite en Swift, ligne de statut maison en bash.',
+    'Inutile d\'en faire autant : soigner un CLAUDE.md concis et utile, apprendre les fonctions clés et ces astuces suffit déjà.']},
+{n:12,c:'context',a:'tip-12-search-through-your-conversation-history',t:'Fouiller l\'historique des conversations',
+ e:'Tout est stocké localement — demandez simplement à Claude « qu\'a-t-on dit sur X aujourd\'hui ? ».',
+ p:['Les conversations vivent dans `~/.claude/projects/`, un dossier par projet (le chemin, avec les `/` remplacés par des `-`).',
+    'Chaque conversation est un fichier `.jsonl`, consultable avec `grep`, `find` ou `jq`.',
+    'Le plus simple reste de poser la question à Claude, qui fera la recherche pour vous.'],
+ code:[{l:'bash',v:`# conversations mentionnant « reddit »
+grep -l -i "reddit" ~/.claude/projects/*/*.jsonl
+
+# seulement les messages utilisateur d'une conversation
+jq -r 'select(.type=="user") | .message.content' fichier.jsonl`}]},
+{n:13,c:'method',a:'tip-13-multitasking-with-terminal-tabs',t:'Le multitâche par onglets',
+ e:'Avec plusieurs instances de Claude, l\'organisation compte plus que la technique : trois ou quatre tâches à la fois, pas plus.',
+ p:['Méthode « cascade » : chaque nouvelle tâche ouvre un onglet à droite ; on balaie de gauche (le plus ancien) à droite (le plus récent).',
+    'Le sens de lecture reste constant, sauf pour répondre à une notification ou vérifier une tâche précise.',
+    'L\'onglet le plus à gauche est réservé en permanence à l\'outil de transcription vocale.']},
+{n:14,c:'method',a:'tip-14-git-worktrees-for-parallel-branch-work',t:'Les worktrees Git pour travailler en parallèle',
+ e:'Un worktree, c\'est une branche + un dossier dédié : plusieurs branches ouvertes en même temps, sans conflit.',
+ p:['Sans worktree, un dossier de projet ne peut être que sur une branche à la fois.',
+    'Avec, on garde `main` dans le dossier d\'origine et on travaille sur `feature-1` dans un autre dossier, simultanément.',
+    'Demandez à Claude de le créer : inutile de retenir la syntaxe.',
+    'Se superpose naturellement à la méthode « cascade » d\'onglets (astuce 13).'],
+ code:[{l:'bash',v:`git worktree add ../mon-projet-feature -b feature-1`}]},
+{n:15,c:'method',a:'tip-15-manual-exponential-backoff-for-long-running-jobs',t:'Le backoff exponentiel manuel pour les tâches longues',
+ e:'Pour attendre un build ou une CI, faites vérifier à intervalles croissants : 1 min, 2 min, 4 min…',
+ p:['Le backoff exponentiel (espacer de plus en plus les nouvelles tentatives) est une technique classique ; ici, c\'est l\'agent qui l\'applique « à la main ».',
+    'Claude surveille ainsi l\'avancement et vous prévient à la fin.',
+    'Pour GitHub Actions, `gh run watch` produit un flot de lignes qui gaspille des tokens ; `gh run view <id> | grep <job>` à intervalles croissants est bien plus économe.']},
+{n:16,c:'beyond',a:'tip-16-claude-code-as-a-writing-assistant',t:'Claude Code, assistant d\'écriture',
+ e:'Contexte complet, consignes détaillées (à la voix), premier jet… puis relecture ligne à ligne, ensemble.',
+ p:['Donnez d\'abord tout le contexte de ce que vous voulez écrire, puis des instructions précises ; recommencez si le premier jet ne convient pas.',
+    'Ensuite, passez le texte en revue avec Claude : ce qui vous plaît et pourquoi, ce qui doit bouger, ce qui doit changer.',
+    'Disposition conseillée : le terminal à gauche, l\'éditeur à droite.']},
+{n:17,c:'beyond',a:'tip-17-markdown-is-the-st',t:'Le Markdown, c\'est génial',
+ e:'Pour écrire avec Claude Code, le Markdown est désormais le format le plus efficace.',
+ p:['Article de blog, post LinkedIn : dictez à Claude, faites enregistrer en Markdown, retravaillez à partir de là.',
+    'Pour coller du Markdown dans un outil qui le digère mal : collez-le d\'abord dans une page Notion vierge, puis copiez depuis Notion.',
+    'Si le collage normal échoue, essayez {{Ctrl+Maj+V}} (collage sans mise en forme).']},
+{n:18,c:'beyond',a:'tip-18-preserve-links-when-pasting',t:'Conserver les liens au collage',
+ e:'Le chemin inverse marche aussi : passer par Notion convertit un texte riche en Markdown avec ses liens.',
+ p:['Un texte copié depuis Slack et collé tel quel dans Claude Code perd ses liens.',
+    'Collé dans Notion puis recopié, il ressort en Markdown, liens compris.',
+    'Autre option : demandez à Claude de lire directement le presse-papiers (`pbpaste` sur Mac), sans altération.'],
+ note:'Sous Windows, Claude peut lire le presse-papiers avec `Get-Clipboard` (PowerShell).'},
+{n:19,c:'auto',a:'tip-19-isolated-environments-for-long-running-risky-tasks',t:'Des environnements isolés pour les tâches longues et risquées',
+ e:'Pour laisser Claude agir sans demander la permission, enfermez-le dans un conteneur ou une machine dédiée.',
+ p:['Idéal pour `--dangerously-skip-permissions` : recherche, expérimentation, tâches longues potentiellement risquées.',
+    'Deux approches : un conteneur (l\'auteur fournit un environnement prêt à l\'emploi, safeclaw) ou une machine entière que Claude contrôle, souris et écran compris.',
+    'Le mode auto (astuce 31) est un bon défaut, mais il ne supprime ni tous les risques ni toutes les validations.',
+    'Avancé : votre Claude local pilote un Claude « ouvrier » dans un conteneur via `tmux` (`send-keys` pour envoyer, `capture-pane` pour lire), puis rapatrie les résultats.',
+    'Multi-modèles : d\'autres CLI (Command Line Interface, outils en ligne de commande) d\'IA comme Codex peuvent tourner en conteneur, Claude Code servant de chef d\'orchestre.']},
+{n:20,c:'mindset',a:'tip-20-the-best-way-to-get-better-at-using-claude-code-is-by-using-it',t:'On progresse avec Claude Code en s\'en servant',
+ e:'Comme une grimpeuse qui progresse… en grimpant : rien ne remplace la pratique.',
+ p:['Vidéos, livres et astuces complètent, mais l\'usage reste le meilleur professeur.',
+    'L\'auteur propose une « règle du milliard de tokens » à la place des 10 000 heures : consommer beaucoup pour développer l\'intuition.',
+    'Les modèles récents sont assez abordables pour mener plusieurs sessions en parallèle sans trop compter.']},
+{n:21,c:'context',a:'tip-21-fork-and-half-clone-conversations',t:'Forker et demi-cloner une conversation',
+ e:'Explorez une autre piste sans perdre le fil, et allégez une conversation trop longue sans la résumer.',
+ p:['`/branch` crée une branche de la session en cours ; `--fork-session` s\'utilise avec `--resume` ou `--continue` (ex. `claude -c --fork-session`).',
+    'Une petite fonction shell permet d\'écrire `--fs` au lieu de `--fork-session`.',
+    'Le demi-clone (script `half-clone-conversation.sh`) ne garde que la seconde moitié de la conversation ; une variante « quart-clone » ne garde que le dernier quart.',
+    'Avec un hook `Stop` et le script `check-context.sh`, Claude lance `/half-clone` dès que le contexte dépasse 85 % — à condition de désactiver l\'auto-compaction.',
+    'Avantage sur `/compact` : rapide et déterministe, vos messages restent intacts au lieu d\'être résumés. Pensez à autoriser `Read(~/.claude)`.'],
+ code:[{l:'~/.claude/settings.json — hook de demi-clone automatique',v:`{
+  "hooks": {
+    "Stop": [
+      { "hooks": [
+        { "type": "command", "command": "~/.claude/scripts/check-context.sh" }
+      ] }
+    ]
+  },
+  "permissions": { "allow": ["Read(~/.claude)"] }
+}`}]},
+{n:22,c:'start',a:'tip-22-use-realpath-to-get-absolute-paths',t:'realpath pour obtenir des chemins absolus',
+ e:'Pour désigner un fichier d\'un autre dossier, donnez à Claude son chemin absolu.',
+ p:['`realpath chemin/relatif` affiche le chemin complet, à coller dans votre message.'],
+ code:[{l:'bash',v:`realpath some/relative/path`}],
+ note:'Équivalent PowerShell : `Resolve-Path .\\chemin\\relatif` (ou `(Get-Item fichier).FullName`).'},
+{n:23,c:'mindset',a:'tip-23-understanding-claudemd-vs-skills-vs-slash-commands-vs-plugins',t:'CLAUDE.md, skills, commandes slash, plugins : qui fait quoi ?',
+ e:'Quatre façons voisines d\'emballer des instructions — leur différence tient surtout au moment où elles sont chargées.',
+ p:['**CLAUDE.md** : chargé au début de chaque conversation, quoi qu\'il arrive. Au niveau projet (`./CLAUDE.md`) ou global (`~/.claude/CLAUDE.md`). Sa force : la simplicité.',
+    '**Skills** : des instructions mieux structurées, chargées seulement quand elles servent (par Claude automatiquement, ou via `/nom-du-skill`). Plus économes en tokens.',
+    '**Commandes slash** : instructions packagées, pensées pour être déclenchées par l\'utilisateur au moment choisi. Elles ont depuis été fusionnées avec les skills.',
+    '**Plugins** : un paquet qui peut regrouper skills, commandes, agents, hooks et serveurs MCP — sans obligation de tout contenir. Exemple : le plugin dx (astuce 44).']},
+{n:24,c:'git',a:'tip-24-interactive-pr-reviews',t:'Des revues de PR interactives',
+ e:'Claude Code n\'est pas une machine à verdict unique : c\'est un relecteur avec qui on dialogue.',
+ p:['Faites récupérer la PR avec `gh`, puis menez la revue comme vous l\'entendez.',
+    'Vue d\'ensemble, fichier par fichier, exécution des tests : vous choisissez le rythme, la profondeur et le niveau de détail.']},
+{n:25,c:'beyond',a:'tip-25-claude-code-as-a-research-tool',t:'Claude Code, outil de recherche',
+ e:'Un remplaçant de Google et des « deep research », en plus puissant — pourvu qu\'on lui ouvre les bonnes sources.',
+ p:['Cas d\'usage : comprendre pourquoi un GitHub Actions a échoué, analyser le sentiment ou un marché sur Reddit, explorer une base de code, dénicher une information publique.',
+    'La clé : lui fournir les sources et la manière d\'y accéder — `gh`, un conteneur (astuce 19), le skill reddit-fetch, un MCP comme Slack pour les données privées, ou le copier-coller {{Ctrl+A}} (astuce 10).',
+    'Si une URL résiste, passez par Playwright MCP ou l\'intégration Chrome (astuce 9).',
+    'Pour la recherche scientifique, l\'auteur a créé le plugin paper-search, qui interroge les publications académiques.',
+    'Il raconte avoir économisé 10 000 $ grâce à une recherche menée avec Claude Code (article lié dans le dépôt).']},
+{n:26,c:'git',a:'tip-26-mastering-different-ways-of-verifying-its-output',t:'Varier les façons de vérifier le travail de Claude',
+ e:'Tests, lecture, client Git visuel, PR brouillon… et l\'auto-vérification demandée explicitement.',
+ p:['Faites écrire des tests et vérifiez qu\'ils tiennent la route ; relisez le code au fil de l\'eau dans l\'interface.',
+    'Un client Git visuel comme GitHub Desktop permet de parcourir rapidement les changements.',
+    'Faites ouvrir une PR brouillon et relisez-la avant d\'en faire une vraie.',
+    'Demandez-lui de se relire : « es-tu sûr ? revérifie ». Le prompt favori de l\'auteur : revérifier chaque affirmation, une par une, et finir par un tableau de ce qui a pu être confirmé.']},
+{n:27,c:'git',a:'tip-27-claude-code-as-a-devops-engineer',t:'Claude Code, ingénieur DevOps',
+ e:'Un échec de CI ? « Creuse et trouve la cause racine » — puis insistez.',
+ p:['La première réponse peut être superficielle : relancez avec des questions précises — un commit particulier ? une PR ? un test instable (« flaky ») ?',
+    'Claude encaisse à votre place la lecture fastidieuse des journaux d\'exécution.',
+    'La commande `/gha <url>` (plugin dx) automatise l\'enquête : instabilité, commit fautif, correctif proposé.',
+    'Ensuite : PR brouillon, vérification, auto-relecture, puis vraie PR.']},
+{n:28,c:'mindset',a:'tip-28-keep-claudemd-simple-and-review-it-periodically',t:'Un CLAUDE.md simple, relu régulièrement',
+ e:'Commencez sans CLAUDE.md, n\'y ajoutez que ce que vous répétez, et faites le ménage de temps en temps.',
+ p:['Quand vous vous surprenez à redire la même chose à Claude, c\'est le moment de l\'ajouter.',
+    'Demandez simplement à Claude de l\'ajouter au CLAUDE.md du projet ou au global : il saura quel fichier modifier.',
+    'Relisez-le périodiquement : des consignes deviennent obsolètes, de nouveaux usages méritent d\'y figurer.',
+    'Le skill `review-claudemd` analyse vos conversations récentes et suggère des améliorations.']},
+{n:29,c:'beyond',a:'tip-29-claude-code-as-the-universal-interface',t:'Claude Code, interface universelle',
+ e:'Bien plus qu\'un environnement de développement : la porte d\'entrée vers tout ce que fait votre ordinateur.',
+ p:['Montage vidéo rapide (via ffmpeg), transcription en lot de fichiers audio (Whisper), analyse et visualisation d\'un CSV : décrivez le besoin, il trouve l\'outil.',
+    'Ménage disque : il repère les gros fichiers oubliés, les images Docker inutiles (`docker system prune`), les caches dormants.',
+    'On revient à l\'interface texte des débuts de l\'informatique — mais démultipliable : un deuxième, troisième, quatrième « cerveau » par onglet, à qui déléguer le fastidieux.']},
+{n:30,c:'method',a:'tip-30-its-all-about-choosing-the-right-level-of-abstraction',t:'Tout est question de niveau d\'abstraction',
+ e:'Le « vibe coding » n\'est ni bon ni mauvais : tout dépend de l\'enjeu, et on peut régler la profondeur à volonté.',
+ p:['Pour un projet jetable ou une partie non critique, rester en surface est acceptable.',
+    'Ailleurs, descendez : structure des fichiers, fonctions, lignes de code, dépendances, journaux d\'erreur précis.',
+    'L\'image de l\'iceberg : le survoler de loin, s\'en approcher, puis plonger de plus en plus profond — avec Claude comme guide.']},
+{n:31,c:'auto',a:'tip-31-use-auto-mode',t:'Utiliser le mode auto',
+ e:'Claude juge lui-même si une commande est sûre dans son contexte, au lieu de tout vous soumettre.',
+ p:['On y accède en faisant défiler les modes avec {{Maj+Tab}}.',
+    'Il supprime l\'approbation machinale : celle qu\'on donne par lassitude, à une commande trop longue pour être lue.',
+    'Pour la prudence maximale, gardez la validation manuelle ; pour l\'autonomie totale, utilisez un conteneur (astuce 19).',
+    'C\'est désormais le mode par défaut sur les offres Pro, Max et Team.'],
+ code:[{l:'~/.claude/settings.json',v:`{
+  "permissions": {
+    "defaultMode": "auto"
+  }
+}`}]},
+{n:32,c:'auto',a:'tip-32-control-claude-code-from-your-phone',t:'Piloter Claude Code depuis son téléphone',
+ e:'Lancez une tâche, partez, suivez-la de n\'importe où — idéal avec le mode auto.',
+ p:['`/remote-control` (ou `/rc`) dans une session existante : la même session devient accessible depuis le téléphone, en alternance avec l\'ordinateur.',
+    '`claude remote-control --spawn=worktree --capacity=N` démarre un serveur qui permet de créer de nouvelles sessions depuis le téléphone, chacune dans son propre worktree.',
+    'Prudence : accéder à votre session, c\'est accéder à votre ordinateur. L\'auteur préfère `/rc` ponctuel et le coupe ensuite, sauf en environnement isolé.',
+    'Activation systématique possible via `/config` ou `"remoteControlAtStartup": true` (désactivé par défaut).']},
+{n:33,c:'beyond',a:'tip-33-learn-to-use-artifacts',t:'Apprendre à utiliser les artifacts',
+ e:'Pour une page HTML/CSS/JS, demandez à Claude de la publier en artifact : vous obtenez un lien claude.ai.',
+ p:['Privé par défaut (derrière votre connexion Anthropic), partageable si vous le décidez.',
+    'S\'ouvre directement dans l\'application mobile Claude.',
+    'Limites : une page autonome, sans serveur ; les requêtes externes sont bloquées, sauf les scripts de quelques CDN (Content Delivery Network) autorisés comme cdnjs.']},
+{n:34,c:'git',a:'tip-34-write-lots-of-tests-and-use-tdd',t:'Écrire beaucoup de tests (et pratiquer le TDD)',
+ e:'Plus Claude écrit de code, plus les tests deviennent indispensables.',
+ p:['Une IA peut tester son propre travail : écrire un test oblige à regarder le problème sous un autre angle, comme pour un humain.',
+    'Le TDD (Test-Driven Development, développement piloté par les tests) marche très bien : 1) écrire les tests, 2) vérifier qu\'ils échouent, 3) les commiter, 4) écrire le code qui les fait passer.',
+    'Les tests commités d\'abord forment un contrat clair et une cible concrète.',
+    'Relisez quand même les tests : aucun ne doit tricher en renvoyant simplement « vrai ».']},
+{n:35,c:'mindset',a:'tip-35-be-braver-in-the-unknown-iterative-problem-solving',t:'Oser l\'inconnu, résoudre par itérations',
+ e:'Avec Claude Code, on ose s\'attaquer à des domaines qu\'on ne maîtrise pas — à condition d\'avancer par itérations.',
+ p:['L\'auteur a ainsi corrigé du code React puis un problème mêlant Python et Rust, deux terrains nouveaux pour lui.',
+    'La première solution proposée était médiocre ; plutôt que de désactiver la fonctionnalité, il a ralenti et cherché mieux, sans régression.',
+    'Démarche : Claude propose des causes et des pistes, on expérimente, on abandonne les impasses, on change de direction.',
+    'Maîtrisez le rythme : vite pour explorer, lentement pour comprendre une ligne précise.']},
+{n:36,c:'method',a:'tip-36-running-bash-commands-and-subagents-in-the-background',t:'Commandes et sous-agents en arrière-plan',
+ e:'{{Ctrl+B}} envoie une commande longue en arrière-plan ; Claude continue à travailler et la surveille.',
+ p:['Claude sait relire plus tard la sortie d\'un processus en arrière-plan — éventuellement avec le backoff de l\'astuce 15.',
+    'Les sous-agents peuvent aussi tourner en arrière-plan, pour une recherche longue ou une surveillance périodique.',
+    'Usage stratégique : découper une grosse analyse (une immense base de code) entre plusieurs sous-agents en parallèle.',
+    'Précisez combien en lancer, en avant- ou arrière-plan, et quel modèle (Fable, Opus, Sonnet, Haiku) selon la difficulté ; par défaut, ils héritent du modèle de la conversation.']},
+{n:37,c:'mindset',a:'tip-37-the-era-of-personalized-software-is-here',t:'L\'ère du logiciel sur mesure est arrivée',
+ e:'On peut désormais créer des outils juste pour soi, en une heure ou deux.',
+ p:['L\'auteur utilise chaque jour son propre outil de transcription, a personnalisé Claude Code lui-même et accéléré ses analyses de données.',
+    'Exemple : plutôt que de lutter pour faire tourner un serveur MCP Slack en Docker dans Docker, il a fait écrire une petite CLI directe avec le SDK Node de Slack.',
+    'Autre création : un modèle de présentation en un seul fichier HTML embarquant un vrai terminal interactif.']},
+{n:38,c:'start',a:'tip-38-navigating-and-editing-your-input-box',t:'Naviguer et éditer dans la zone de saisie',
+ e:'La zone de saisie reprend les raccourcis classiques des terminaux (readline) : on s\'y sent vite chez soi.',
+ p:['Navigation : {{Ctrl+A}} début de ligne, {{Ctrl+E}} fin de ligne, {{Alt+←}} / {{Alt+→}} mot par mot.',
+    'Édition : {{Ctrl+W}} efface le mot précédent, {{Ctrl+U}} jusqu\'au début, {{Ctrl+K}} jusqu\'à la fin, {{Ctrl+C}} vide la saisie.',
+    '{{Ctrl+G}} ouvre le prompt dans votre éditeur externe (variable `EDITOR`) — pratique pour coller un long texte.',
+    'Retour à la ligne : `\\` puis {{Entrée}}, partout et sans configuration ; `/terminal-setup` pour un vrai raccourci.',
+    'Coller une image : {{Ctrl+V}} sur Mac/Linux, {{Alt+V}} sous Windows.',
+    'Suggestions de prompt agaçantes ? Désactivez-les dans `/config` ou avec `"promptSuggestionEnabled": false`.'],
+ code:[{l:'~/.claude/settings.json',v:`{
+  "env": { "EDITOR": "code --wait" },
+  "promptSuggestionEnabled": false
+}`}]},
+{n:39,c:'method',a:'tip-39-spend-some-time-planning-but-also-prototype-quickly',t:'Planifier un peu, prototyper vite',
+ e:'Les grandes décisions se prennent tôt ; un prototype rapide aide à les prendre.',
+ p:['Fixez tôt la technologie, la structure du projet, l\'emplacement de chaque fonctionnalité.',
+    'Un prototype jetable permet de valider (ou d\'écarter) une technologie.',
+    'Passez en mode plan avec {{Maj+Tab}}, ou demandez simplement un plan avant toute ligne de code.',
+    'L\'auteur l\'a réappris en tentant une visionneuse de différences (tmux + lazygit, puis Ink/Node) : jamais publiée, mais la leçon est restée.']},
+{n:40,c:'method',a:'tip-40-simplify-overcomplicated-code',t:'Simplifier le code trop compliqué',
+ e:'Claude a un penchant pour écrire trop de code et faire des changements non demandés : demandez-lui de simplifier.',
+ p:['Un code qui marche peut rester difficile à maintenir et à vérifier.',
+    'Posez des questions : « pourquoi ce changement ? », « à quoi sert cette ligne ? ».',
+    'Bien questionnée, l\'IA aide à comprendre un code plus vite que seul — surtout sur un gros projet.',
+    'Vaut aussi pour la prose : Claude a tendance à récapituler en fin de paragraphe ; faites couper.']},
+{n:41,c:'mindset',a:'tip-41-automation-of-automation',t:'Automatiser l\'automatisation',
+ e:'Dès qu\'une tâche se répète, cherchez à l\'automatiser — c\'est plus productif, et plus amusant.',
+ p:['Le parcours de l\'auteur : un plugin ChatGPT (Kaguya) pour ne plus copier-coller les commandes, puis Claude Code, puis une app vocale pour ne plus taper.',
+    'Ensuite : CLAUDE.md pour ne plus se répéter, skills et scripts pour ne plus relancer les mêmes commandes.',
+    'Règle : deux fois, ça passe ; au-delà, automatisez.']},
+{n:42,c:'mindset',a:'tip-42-share-your-knowledge-and-contribute-where-you-can',t:'Partager ses connaissances et contribuer',
+ e:'Partager fait aussi apprendre : les retours enrichissent en retour.',
+ p:['Posts, cours, vidéos, sessions internes : transmettre consolide et attire de nouvelles idées.',
+    'Signalez bugs et suggestions sur le dépôt Claude Code : plusieurs propositions de l\'auteur ont été intégrées très vite (version 2.0.67).']},
+{n:43,c:'mindset',a:'tip-43-keep-learning',t:'Continuer d\'apprendre',
+ e:'Trois sources pour rester à jour.',
+ p:['Demandez à Claude Code lui-même : un sous-agent spécialisé répond sur ses fonctions, commandes, réglages, hooks et serveurs MCP.',
+    '`/release-notes` liste les nouveautés de votre version.',
+    'La communauté r/ClaudeAI sur Reddit partage ses façons de travailler.']},
+{n:44,c:'start',a:'tip-44-install-the-dx-plugin',t:'Installer le plugin dx',
+ e:'Le dépôt est aussi un plugin, dx (developer experience), qui regroupe plusieurs outils présentés ici.',
+ p:['`/dx:gha <url>` — analyser un échec GitHub Actions (astuce 27).',
+    '`/dx:handoff` — document de passation (astuce 8) ; `/dx:half-clone` et `/dx:quarter-clone` — alléger le contexte (astuce 21).',
+    '`reddit-fetch` (déclenché automatiquement sur une URL Reddit), `review-claudemd` (astuce 28), `hn-summarize` (résumés Hacker News).',
+    '`version-check` (quelle version de Claude Code utiliser) et `private-github-search` (recherche plein texte dans vos dépôts privés).',
+    'Compagnon recommandé : Playwright MCP pour l\'automatisation du navigateur.'],
+ code:[{l:'bash',v:`claude plugin marketplace add ykdojo/claude-code-tips
+claude plugin install dx@ykdojo
+claude mcp add -s user playwright npx @playwright/mcp@latest`}]},
+{n:45,c:'start',a:'tip-45-quick-setup-script',t:'Script d\'installation rapide',
+ e:'Un script applique d\'un coup la plupart des recommandations, en vous laissant écarter ce que vous ne voulez pas.',
+ p:['Il propose : le plugin dx, la ligne de statut, la désactivation des mises à jour automatiques, le chargement à la demande des outils MCP, des permissions de lecture, la suppression de l\'attribution, les alias et le raccourci `--fs`.',
+    'Il affiche la liste complète avant d\'agir et demande quels éléments ignorer.'],
+ code:[{l:'bash',v:`bash <(curl -s https://raw.githubusercontent.com/ykdojo/claude-code-tips/main/scripts/setup.sh)`}],
+ note:'Bonne pratique : lisez toujours un script avant de l\'exécuter via `curl`. Il cible macOS/Linux (zsh/bash).'},
+{n:46,c:'auto',a:'tip-46-switch-between-multiple-claude-accounts',t:'Jongler entre plusieurs comptes Claude',
+ e:'La variable `CLAUDE_CODE_OAUTH_TOKEN` prend le pas sur la connexion enregistrée : un jeton par compte, une fonction par compte.',
+ p:['`claude setup-token` génère un jeton valable environ un an pour le compte avec lequel vous vous connectez.',
+    'Stockez chaque jeton dans le trousseau du système (Keychain sur macOS), jamais en clair dans vos fichiers de configuration.',
+    'Deux petites fonctions (`clw` pour le travail, `clp` pour le perso) récupèrent le bon jeton et lancent `claude` avec vos arguments ; `claude` seul garde la connexion habituelle.',
+    'Sous Linux et Windows, la connexion est stockée dans `~/.claude/.credentials.json`, mais la variable fonctionne de la même façon.'],
+ note:'Autre approche, utile sous Windows : un dossier de configuration distinct par compte via la variable `CLAUDE_CONFIG_DIR`.'},
+{n:47,c:'beyond',a:'tip-47-use-github-as-your-knowledge-base',t:'GitHub comme base de connaissances',
+ e:'Des dépôts privés en guise de carnet de notes : Claude y fait ses recherches et les met à jour.',
+ p:['L\'auteur remplace Notion par des dépôts GitHub : il y dicte ses idées, développe ses notes, et laisse Claude enrichir le contenu.',
+    'Des dépôts dédiés aux skills capitalisent les tâches récurrentes.',
+    'Le chaînon manquant — la recherche dans les dépôts privés — est comblé par le skill `private-github-search` : copie locale de tous vos dépôts et recherche avec ripgrep.']},
+{n:48,c:'git',a:'tip-48-learn-to-review-code-through-a-testingmd-document',t:'Relire du code grâce à un TESTING.md',
+ e:'Plutôt que de lire tout le code, faites-le tester à fond par Claude et relisez le compte rendu de ces tests.',
+ p:['Le vrai défi d\'une grosse revue est de se construire un modèle mental : comment savoir que c\'est correct ?',
+    'Demandez à Claude de tout tester et de documenter dans `TESTING.md` comment chaque point a été vérifié.',
+    'Ajustez le format : plus court, plus détaillé, moins de jargon — jusqu\'à ce qu\'il vous convienne.',
+    'Versionné dans Git, ce journal devient la preuve de la manière dont chaque élément a été testé.']},
+{n:49,c:'start',a:'tip-49-turn-on-the-concise-output-style',t:'Activer le style de réponse concis',
+ e:'Moins de bavardage, autant de raisonnement : passez le style de sortie sur « Concise ».',
+ p:['Dans `/config`, rubrique **Output style**, choisissez **Concise** — ou `"outputStyle": "Concise"` dans les paramètres (version 2.1.237 ou plus récente).',
+    'Fini les « tu parles trop, fais-moi un résumé » ; posez des questions de suivi si vous voulez du détail.',
+    'Seul le texte affiché est raccourci : la réflexion du modèle n\'est pas affectée.']}
+];
+
+/* ---------- Utilitaires ---------- */
+const $ = s => document.querySelector(s);
+const store = {
+  get(k, d){ try { const v = localStorage.getItem('cctfr:' + k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem('cctfr:' + k, JSON.stringify(v)); } catch(e){} }
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function fmt(s){
+  return esc(s)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\{\{(.+?)\}\}/g, (_, k) => '<kbd>' + k + '</kbd>');
+}
+const plain = s => String(s).replace(/[`*{}]/g, '');
+const byNum = [...TIPS].sort((a, b) => a.n - b.n);
+
+let read = new Set(store.get('read', []));
+let mode = store.get('mode', 'cat');
+const nav = $('#nav'), view = $('#view'), q = $('#q');
+
+/* ---------- Thème ---------- */
+function applyTheme(t){
+  if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+  const dark = getComputedStyle(document.documentElement).colorScheme.includes('dark');
+  document.querySelector('meta[name=theme-color]').content = dark ? '#141210' : '#f8f4ee';
+}
+applyTheme(store.get('theme', null));
+$('#themeBtn').onclick = () => {
+  const dark = getComputedStyle(document.documentElement).colorScheme.includes('dark');
+  const t = dark ? 'light' : 'dark'; store.set('theme', t); applyTheme(t);
+};
+
+/* ---------- Sommaire ---------- */
+function itemHtml(t){
+  return `<a href="#astuce-${t.n}" class="item ${read.has(t.n) ? 'is-read' : ''}" data-n="${t.n}"><span class="num">${t.n}</span><span class="lbl">${esc(t.t)}</span></a>`;
+}
+function renderNav(){
+  const f = norm(q.value.trim());
+  const match = t => !f || norm(t.n + ' ' + t.t + ' ' + plain(t.e) + ' ' + t.p.map(plain).join(' ')).includes(f);
+  let html = '';
+  if (mode === 'num') {
+    const items = byNum.filter(match);
+    html = items.length ? '<div class="grp">' + items.map(itemHtml).join('') + '</div>' : '';
+  } else {
+    for (const [id, cat] of Object.entries(CATS)) {
+      const all = byNum.filter(t => t.c === id), items = all.filter(match);
+      if (!items.length) continue;
+      html += `<div class="grp"><div class="grp-h"><span class="dot" style="--c:${cat.color}"></span>${cat.label}<span class="cnt">${all.filter(t => read.has(t.n)).length}/${all.length}</span></div>${items.map(itemHtml).join('')}</div>`;
+    }
+  }
+  nav.innerHTML = html || '<p class="empty">Aucune astuce ne correspond.</p>';
+  markActive();
+  $('#byCat').setAttribute('aria-pressed', mode === 'cat');
+  $('#byNum').setAttribute('aria-pressed', mode === 'num');
+}
+function markActive(){
+  const n = current();
+  nav.querySelectorAll('.item').forEach(a => a.classList.toggle('active', +a.dataset.n === n));
+  const act = nav.querySelector('.item.active');
+  if (act) act.scrollIntoView({block:'nearest'});
+}
+q.addEventListener('input', renderNav);
+$('#byCat').onclick = () => { mode = 'cat'; store.set('mode', mode); renderNav(); };
+$('#byNum').onclick = () => { mode = 'num'; store.set('mode', mode); renderNav(); };
+
+function updateProgress(){
+  const pct = Math.round(read.size / TIPS.length * 100);
+  $('#hprog').innerHTML = `<b>${read.size}</b>/${TIPS.length} lues`;
+  return pct;
+}
+
+/* ---------- Vues ---------- */
+function current(){
+  const m = location.hash.match(/^#(?:astuce-|tip-)(\d+)/);
+  return m ? +m[1] : null;
+}
+
+function renderHome(){
+  const pct = updateProgress();
+  const last = store.get('last', null);
+  const nextUnread = byNum.find(t => !read.has(t.n));
+  view.innerHTML = `<section class="hero fade">
+    <div class="term"><div class="term-bar"><i></i><i></i><i></i><span>zsh — claude-code-tips</span></div>
+      <div class="term-body"><span class="p">❯</span> claude "donne-moi tes meilleures astuces, en français"<br>
+      <span class="dim">✻ ${TIPS.length} astuces chargées · ${Object.keys(CATS).length} thèmes · de la base à l'avancé</span><br>
+      <span class="p">❯</span> <span id="typed"></span><span class="caret"></span></div></div>
+    <h1>Tirer le meilleur de <em>Claude Code</em>, une astuce à la fois.</h1>
+    <p class="lead">Les ${TIPS.length} astuces du guide de YK Sugi, condensées en fiches claires en français : commandes, gestion du contexte, Git, tests, autonomie… Naviguez par thème, cherchez un mot-clé, cochez ce que vous avez lu.</p>
+    <div class="cta">
+      ${last != null ? `<a class="btn primary" href="#astuce-${last}">↻ Reprendre à l'astuce ${last}</a>` : `<a class="btn primary" href="#astuce-0">▶ Commencer</a>`}
+      ${nextUnread && nextUnread.n !== last ? `<a class="btn" href="#astuce-${nextUnread.n}">Prochaine non lue · #${nextUnread.n}</a>` : ''}
+      <button class="btn" id="rnd">🎲 Au hasard</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>${TIPS.length}</b><span>astuces</span></div>
+      <div class="stat"><b>${Object.keys(CATS).length}</b><span>thèmes</span></div>
+      <div class="stat"><b>${pct} %</b><span>${read.size} lue${read.size > 1 ? 's' : ''}</span><div class="bar"><i style="width:${pct}%"></i></div></div>
+    </div>
+    <h2 class="sec">Explorer par thème</h2>
+    <div class="cats">${Object.entries(CATS).map(([id, c]) => {
+      const list = byNum.filter(t => t.c === id), done = list.filter(t => read.has(t.n)).length;
+      const first = list.find(t => !read.has(t.n)) || list[0];
+      return `<a class="cat" style="--c:${c.color}" href="#astuce-${first.n}"><span class="ic">${c.icon}</span><h3>${c.label}</h3><p>${c.desc}</p><div class="meta">${list.length} astuces · ${done} lue${done > 1 ? 's' : ''}</div></a>`;
+    }).join('')}</div>
+    <div class="credits">📚 Contenu d'origine : <a href="${SRC}" target="_blank" rel="noopener">ykdojo/claude-code-tips</a>, © YK Sugi, tous droits réservés. Ces fiches en sont des résumés reformulés en français, pas une traduction intégrale : chaque fiche renvoie vers le texte original complet, avec ses captures, scripts et exemples. Les encadrés « Note d'adaptation » sont des ajouts propres à cette version.</div>
+  </section>`;
+  $('#rnd').onclick = () => { const pool = byNum.filter(t => !read.has(t.n)); const list = pool.length ? pool : byNum; location.hash = 'astuce-' + list[Math.floor(Math.random() * list.length)].n; };
+  typeLine();
+  renderBbar(null);
+  document.title = 'Astuces Claude Code';
+}
+
+let typeTimer;
+function typeLine(){
+  clearTimeout(typeTimer);
+  const el = $('#typed'); if (!el) return;
+  const lines = ['/compact', 'git worktree add ../feature', '/usage', 'double-vérifie chaque affirmation', '/rc'];
+  let li = 0, ci = 0, del = false;
+  (function step(){
+    if (!document.body.contains(el)) return;
+    const s = lines[li];
+    el.textContent = s.slice(0, ci);
+    if (!del && ci < s.length) { ci++; typeTimer = setTimeout(step, 70); }
+    else if (!del) { del = true; typeTimer = setTimeout(step, 1400); }
+    else if (ci > 0) { ci--; typeTimer = setTimeout(step, 30); }
+    else { del = false; li = (li + 1) % lines.length; typeTimer = setTimeout(step, 300); }
+  })();
+}
+
+function codeBlock(c){
+  return `<figure class="code"><figcaption><span>${esc(c.l)}</span><button class="copy" type="button">Copier</button></figcaption><pre><code>${esc(c.v)}</code></pre></figure>`;
+}
+
+function renderTip(n){
+  const i = byNum.findIndex(t => t.n === n);
+  if (i < 0) { location.hash = ''; return; }
+  const t = byNum[i], cat = CATS[t.c], prev = byNum[i - 1], next = byNum[i + 1];
+  store.set('last', n);
+  updateProgress();
+  view.innerHTML = `<article class="tip fade" style="--c:${cat.color}">
+    <div class="crumb"><a href="#">~</a><span>/</span><span>${cat.icon} ${cat.label}</span><span>/</span><span>astuce ${n}</span></div>
+    <div class="win">
+      <div class="win-bar"><i></i><i></i><i></i><span>astuce-${String(n).padStart(2, '0')}.md</span><span class="tag"><span class="dot" style="--c:${cat.color}"></span>${cat.label}</span></div>
+      <div class="win-body">
+        <div class="tip-num">ASTUCE #${n}</div>
+        <h1>${esc(t.t)}</h1>
+        <p class="essentiel"><span>L'essentiel</span>${fmt(t.e)}</p>
+        <ul class="points">${t.p.map(p => `<li>${fmt(p)}</li>`).join('')}</ul>
+        ${(t.code || []).map(codeBlock).join('')}
+        ${t.note ? `<aside class="note"><b>💡 Note d'adaptation —</b> ${fmt(t.note)}</aside>` : ''}
+      </div>
+    </div>
+    <div class="tip-actions">
+      <button class="btn read" id="readBtn" aria-pressed="${read.has(n)}">${read.has(n) ? '✓ Lue' : '○ Marquer comme lue'}</button>
+      <a class="btn" href="${SRC}#${t.a}" target="_blank" rel="noopener">Texte original (anglais) ↗</a>
+    </div>
+    <nav class="pager">
+      ${prev ? `<a href="#astuce-${prev.n}"><small>← Astuce ${prev.n}</small><span class="t">${esc(prev.t)}</span></a>` : ''}
+      ${next ? `<a class="next" href="#astuce-${next.n}"><small>Astuce ${next.n} →</small><span class="t">${esc(next.t)}</span></a>` : ''}
+    </nav>
+    <p class="hint">Astuce : <kbd>←</kbd> <kbd>→</kbd> pour naviguer · <kbd>L</kbd> marquer comme lue · <kbd>/</kbd> rechercher</p>
+  </article>`;
+  $('#readBtn').onclick = () => toggleRead(n);
+  renderBbar(t, prev, next);
+  document.title = `#${n} ${t.t} · Astuces Claude Code`;
+}
+
+function renderBbar(t, prev, next){
+  const bb = $('#bbar');
+  if (!t) {
+    bb.innerHTML = `<button id="bbMenu">☰ Sommaire</button><a href="#astuce-${store.get('last', 0)}" class="mid">▶ Lire</a>`;
+  } else {
+    bb.innerHTML = `<a href="${prev ? '#astuce-' + prev.n : '#'}" aria-disabled="${!prev}" aria-label="Astuce précédente">← ${prev ? prev.n : ''}</a>
+      <button class="mid" id="bbRead" aria-pressed="${read.has(t.n)}">${read.has(t.n) ? '✓ Lue' : '○ Lue ?'}</button>
+      <button id="bbMenu" aria-label="Sommaire">☰</button>
+      <a href="${next ? '#astuce-' + next.n : '#'}" aria-disabled="${!next}" aria-label="Astuce suivante">${next ? next.n : ''} →</a>`;
+    $('#bbRead').onclick = () => toggleRead(t.n);
+  }
+  $('#bbMenu').onclick = openDrawer;
+}
+
+function toggleRead(n){
+  read.has(n) ? read.delete(n) : read.add(n);
+  store.set('read', [...read]);
+  const on = read.has(n);
+  const b = $('#readBtn'); if (b) { b.setAttribute('aria-pressed', on); b.textContent = on ? '✓ Lue' : '○ Marquer comme lue'; }
+  const bb = $('#bbRead'); if (bb) { bb.setAttribute('aria-pressed', on); bb.textContent = on ? '✓ Lue' : '○ Lue ?'; }
+  updateProgress(); renderNav();
+  toast(on ? `Astuce ${n} marquée comme lue` : `Astuce ${n} marquée non lue`);
+}
+
+let toastT;
+function toast(msg){
+  const el = $('#toast'); el.textContent = msg; el.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 1600);
+}
+
+/* ---------- Routage ---------- */
+function route(){
+  const n = current();
+  closeDrawer();
+  if (n == null) renderHome(); else renderTip(n);
+  markActive();
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+}
+window.addEventListener('hashchange', route);
+
+/* ---------- Tiroir mobile ---------- */
+function openDrawer(){ document.body.classList.add('drawer'); }
+function closeDrawer(){ document.body.classList.remove('drawer'); }
+$('#menuBtn').onclick = openDrawer;
+$('#scrim').onclick = closeDrawer;
+
+/* ---------- Copie des blocs de code ---------- */
+view.addEventListener('click', e => {
+  const b = e.target.closest('.copy'); if (!b) return;
+  const txt = b.closest('figure').querySelector('code').textContent;
+  const done = () => { b.textContent = 'Copié ✓'; setTimeout(() => b.textContent = 'Copier', 1400); };
+  if (navigator.clipboard) navigator.clipboard.writeText(txt).then(done, () => toast('Copie impossible'));
+  else { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch(err){} ta.remove(); }
+});
+
+/* ---------- Clavier ---------- */
+function go(delta){
+  const n = current();
+  if (n == null) { if (delta > 0) location.hash = 'astuce-' + store.get('last', 0); return; }
+  const i = byNum.findIndex(t => t.n === n), t = byNum[i + delta];
+  if (t) location.hash = 'astuce-' + t.n;
+}
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, textarea')) {
+    if (e.key === 'Escape') { q.value = ''; renderNav(); q.blur(); }
+    if (e.key === 'Enter') { const a = nav.querySelector('.item'); if (a) { location.hash = a.getAttribute('href').slice(1); q.blur(); } }
+    return;
+  }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === 'ArrowRight') go(1);
+  else if (e.key === 'ArrowLeft') go(-1);
+  else if (e.key === '/') { e.preventDefault(); openDrawer(); q.focus(); }
+  else if (e.key === 'Escape') closeDrawer();
+  else if (e.key.toLowerCase() === 'l' && current() != null) toggleRead(current());
+});
+
+/* ---------- Balayage tactile ---------- */
+let tx = null, ty = 0;
+$('#main').addEventListener('touchstart', e => { if (e.target.closest('pre')) { tx = null; return; } tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+$('#main').addEventListener('touchend', e => {
+  if (tx == null || current() == null) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 80 && Math.abs(dy) < 50) go(dx < 0 ? 1 : -1);
+  tx = null;
+}, {passive:true});
+
+/* ---------- PWA : manifeste et icône générés en ligne (fichier unique) ---------- */
+(function pwa(){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#e07a52"/><path d="M140 176l92 80-92 80" fill="none" stroke="#1a0f0a" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/><rect x="262" y="318" width="124" height="46" rx="23" fill="#1a0f0a"/></svg>`;
+  const icon = 'data:image/svg+xml,' + encodeURIComponent(svg);
+  $('#favicon').href = icon;
+  $('#touchicon').href = icon;
+  if (location.protocol.startsWith('http')) {
+    const base = location.href.split('#')[0];
+    const manifest = {
+      name: 'Astuces Claude Code (FR)', short_name: 'Astuces CC', lang: 'fr',
+      start_url: base, scope: base.replace(/[^/]*$/, ''), display: 'standalone',
+      background_color: '#141210', theme_color: '#141210',
+      icons: [{src: icon, sizes: 'any', type: 'image/svg+xml', purpose: 'any'}]
+    };
+    $('#manifest').href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'}));
+  }
+})();
+
+renderNav();
+route();
+</script>
+</body>
+</html>
